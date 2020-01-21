@@ -1,7 +1,7 @@
-import 'dart:js';
-
 import 'package:english_words/english_words.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 
 class MyApp extends StatelessWidget {
   String title = "";
@@ -14,7 +14,17 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 //    final wordPair = new WordPair.random();
-  Widget selection
+    Widget buttonSection = new Container(
+      child: new Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: [
+          buildButtonColumn(context, Icons.call, 'CALL'),
+          buildButtonColumn(context, Icons.near_me, 'ROUTE'),
+          buildButtonColumn(context, Icons.share, 'SHARE'),
+        ],
+      ),
+    );
+
     return new MaterialApp(
       title: title == null ? 'Welcome to Flutter' : title,
       home: new Scaffold(
@@ -22,7 +32,15 @@ class MyApp extends StatelessWidget {
           title: new Text(title == null ? 'Welcome to Flutter' : title),
         ),
         body: new Center(
-          child: new RandomWords(),
+          child: new ListView(
+            children: <Widget>[
+              pictureSelection,
+              titleSelection,
+              buttonSection,
+              textSelection,
+              cardBox,
+            ],
+          ),
 //          child: new Text(wordPair.asPascalCase),
 //          child: Hello World),
         ),
@@ -51,41 +69,72 @@ Widget titleSelection = new Container(
               style: new TextStyle(color: Colors.grey[500]),
             )
           ],
+          crossAxisAlignment: CrossAxisAlignment.start,
         ),
       ),
       new Icon(Icons.star, color: Colors.red[400]),
-      new Text('41')
+      new Text('41'),
     ],
+    mainAxisAlignment: MainAxisAlignment.start,
   ),
 );
 
-Widget getButtonSelection(Context context){
-  child: new Row(children: <Widget>[buildButtonColumn(const, Icon., label)],),),
-}
-//Widget buttonSelection = new Container(
+Widget textSelection = new Container(
+  padding: EdgeInsets.all(32.0),
+  child: new Text("123123123123123"),
+);
 
-Column buildButtonColumn(Context context, IconData icon, String label) {
-  Color color = Theme
-      .of(context)
-      .primaryColor;
+Widget pictureSelection = new Container(
+  child: Image(
+    image: NetworkImage(
+        'https://flutter.github.io/assets-for-api-docs/assets/widgets/owl.jpg'),
+    height: 240,
+    fit: BoxFit.cover,
+  ),
+);
+
+Column buildButtonColumn(BuildContext context, IconData icon, String label) {
+  Color color = Theme.of(context).primaryColor;
   return new Column(
-      mainAxisSize: MainAxisSize.min,
-      mainAxisAlignment: MainAxisAlignment.center,
+//      mainAxisSize: MainAxisSize.min,
+//      mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[
         new Icon(
           icon,
           color: color,
+          size: 50,
         ),
         new Container(
           margin: EdgeInsets.only(top: 8),
           child: new Text(
-            label,
+            label + "",
             style: new TextStyle(
                 fontSize: 12, fontWeight: FontWeight.bold, color: color),
           ),
         ),
       ]);
 }
+
+SizedBox cardBox = new SizedBox(
+  height: 210,
+  child: new Card(
+    child: new Column(
+      children: <Widget>[
+        new ListTile(
+          title: new Text(
+            "sdfsf",
+            style: new TextStyle(fontWeight: FontWeight.w500),
+          ),
+          subtitle: new Text("subsdfsf"),
+          leading: new Icon(
+            Icons.restaurant,
+            color: Colors.blue[500],
+          ),
+        ),
+      ],
+    ),
+  ),
+);
 
 class RandomWords extends StatefulWidget {
   @override
