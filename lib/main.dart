@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/src/scheduler/ticker.dart';
+import 'package:flutter_app/Net.dart';
 import 'package:flutter_app/second.dart';
-
-
 
 void main() {
 //  var test = Test(1, 22222222);
@@ -9,10 +9,11 @@ void main() {
 //  print(test);
 //  runApp(BasicAppbarSample());
   runApp(MaterialApp(
-    home: MaterialContainWidget(),
+    home: TabbedAppBarWidget(),
     routes: <String, WidgetBuilder>{
       '/a': (BuildContext context) => MyApp(title: 'page A'),
-      '/b': (BuildContext context) => MyApp(title: 'page B'),
+      '/b': (BuildContext context) =>
+          BasicAppbarStatefulWidget(bundleData: 'page B'),
       '/c': (BuildContext context) => MyApp(title: 'page C'),
     },
   ));
@@ -32,87 +33,56 @@ Function pushFunction2 = (BuildContext context, String routeName) {
   Navigator.pushNamed(context, routeName);
 };
 
-Function pushFunction3 =(BuildContext context,) {
-  Navigator.push(context, PageRouteBuilder(
-      opaque: true,
-      pageBuilder: (BuildContext context, _, __) {
-        return Center(child: Text('My PageRoute'));
-      },
-      transitionsBuilder: (___, Animation<double> animation, ____,
-          Widget child) {
-        return FadeTransition(
-          opacity: animation,
-          child: RotationTransition(
-            turns: Tween<double>(begin: 0.5, end: 1.0).animate(animation),
-            child: child,
-          ),
-        );
-      }
-  ));
+Function pushFunction3 = (
+  BuildContext context,
+) {
+  Navigator.push(
+      context,
+      PageRouteBuilder(
+          opaque: true,
+          pageBuilder: (BuildContext context, _, __) {
+            return Center(child: Text('My PageRoute'));
+          },
+          transitionsBuilder:
+              (___, Animation<double> animation, ____, Widget child) {
+            return FadeTransition(
+              opacity: animation,
+              child: RotationTransition(
+                turns: Tween<double>(begin: 0.5, end: 1.0).animate(animation),
+                child: child,
+              ),
+            );
+          }));
 };
 
 Function popFunction = (BuildContext context) {
   Navigator.pop(context);
 };
 
+int nowSelectedIndex = 0;
 Choice _selectedChoice = choices[0];
 
-class BasicAppbarSample extends StatefulWidget {
+class TabbedAppBarState extends State<TabbedAppBarWidget>
+    with SingleTickerProviderStateMixin {
+  TabController tabController;
+
   @override
-  State<StatefulWidget> createState() {
-//    return new _BasicAppBarSampleState();
-    return new _TabbedAppBarSample();
-  }
-}
-
-class _TabbedAppBarSample extends State<BasicAppbarSample> {
-  Function onTap;
-
-  void setSelectedChoice(Choice choice) {
-    setState(() {
-      _selectedChoice = choice;
+  void initState() {
+    super.initState();
+    // 创建Controller
+    tabController = TabController(length: choices.length, vsync: this);
+    tabController.addListener(() {
+      if (choices.length > tabController.index &&
+          (nowSelectedIndex != tabController.index)) {
+        print((tabController.index));
+        nowSelectedIndex = tabController.index;
+        setState(() {
+          _selectedChoice = choices[tabController.index];
+        });
+      }
     });
   }
 
-  @override
-  Widget build(BuildContext context) {
-    return new MaterialApp(
-      home: new DefaultTabController(
-          length: choices.length,
-          child: new Scaffold(
-            appBar: new AppBar(
-              title: Text("TabTitle"),
-              bottom: new TabBar(
-                  isScrollable: true,
-                  tabs: choices.map((Choice choice) {
-                    return new Tab(
-                      text: choice.title,
-                      icon: new Icon(choice.icon),
-                    );
-                  }).toList()),
-            ),
-            body: new Padding(
-              padding: EdgeInsets.all(11),
-              child: new ChoiceCard(
-                choice: _selectedChoice,
-                mTapClick: (choi) {
-//                  setSelectedChoice(choi);
-//                  pushFunction(context);
-                },
-              ),
-            ),
-          )),
-    );
-  }
-
-  @override
-  State<StatefulWidget> createState() {
-    // TODO: implement createState
-    return null;
-  }
-}
-
-class MaterialContainWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     cache_context = context;
@@ -123,6 +93,7 @@ class MaterialContainWidget extends StatelessWidget {
             title: Text("TabTitle"),
             bottom: new TabBar(
                 isScrollable: true,
+                controller: this.tabController,
                 tabs: choices.map((Choice choice) {
                   return new Tab(
                     text: choice.title,
@@ -137,7 +108,7 @@ class MaterialContainWidget extends StatelessWidget {
               mTapClick: (choi) {
 //                setSelectedChoice(choi);
 //                pushFunction(context);
-                pushFunction2(context, "/b");
+                pushFunction2(context, "/a");
 //              pushFunction3(context);
               },
             ),
@@ -148,59 +119,10 @@ class MaterialContainWidget extends StatelessWidget {
 
 BuildContext cache_context;
 
-class _BasicAppBarSampleState extends State<BasicAppbarSample> {
-  void _selecte(Choice choice) {
-    setState(() {
-      _selectedChoice = choice;
-    });
-  }
-
+class TabbedAppBarWidget extends StatefulWidget {
   @override
-  Widget build(BuildContext context) {
-    cache_context = context;
-    return new MaterialApp(
-      home: new Scaffold(
-        appBar: new AppBar(
-          title: const Text('AppBar Title'),
-          actions: <Widget>[
-            new IconButton(
-                icon: new Icon(choices[0].icon),
-                onPressed: () {
-                  _selecte(choices[0]);
-                }),
-            new IconButton(
-                icon: new Icon(choices[1].icon),
-                onPressed: () {
-                  _selecte(choices[1]);
-                }),
-            new PopupMenuButton<Choice>(
-              onSelected: _selecte,
-              onCanceled: null,
-              itemBuilder: (BuildContext context) {
-                return choices.skip(2).map((Choice choice) {
-                  return new PopupMenuItem<Choice>(
-                    value: choice,
-                    child: new Icon(
-                      choice.icon,
-                    ),
-                  );
-                }).toList();
-              },
-            ),
-          ],
-        ),
-        body: new Padding(
-          padding: const EdgeInsets.all(36.0),
-          child: new ChoiceCard(
-            choice: _selectedChoice,
-            mTapClick: (choi) {
-              _selecte(choi);
-              pushFunction(context);
-            },
-          ),
-        ),
-      ),
-    );
+  State<StatefulWidget> createState() {
+    return new TabbedAppBarState();
   }
 }
 
@@ -228,6 +150,15 @@ class ChoiceCard extends StatelessWidget {
               new Text(
                 choice.title,
                 style: textStyle,
+              ),
+              new GestureDetector(
+                onTap: () {
+                  pushFunction2(context, "/b");
+                },
+                child: new Text(
+                  "GoToNetDart",
+                  style: Theme.of(context).textTheme.display2,
+                ),
               ),
               new Container(
                 margin: const EdgeInsets.fromLTRB(0, 0, 0, 0),
@@ -265,30 +196,6 @@ class ChoiceCard extends StatelessWidget {
             ],
           ),
         ),
-      ),
-    );
-  }
-}
-
-class SmallIconCard extends StatelessWidget {
-  String title;
-  final IconData mIcon;
-
-  SmallIconCard({this.title = "", this.mIcon});
-
-  @override
-  Widget build(BuildContext context) {
-    return new Card(
-      color: Colors.white,
-      child: new Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: <Widget>[
-          new Icon(
-            this.mIcon,
-          ),
-          new Text(title),
-        ],
       ),
     );
   }
