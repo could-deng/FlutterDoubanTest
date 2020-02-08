@@ -1,15 +1,18 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 
-class NetTestWidget extends StatelessWidget {
-  String bundleData;
+// class NetTestWidget extends StatelessWidget {
+//   String bundleData;
 
-  NetTestWidget({this.bundleData});
+//   NetTestWidget({this.bundleData});
 
-  @override
-  Widget build(BuildContext context) {
-    // TODO: implement build
-  }
-}
+//   @override
+//   Widget build(BuildContext context) {
+//     // TODO: implement build
+//   }
+// }
 
 class BasicAppbarStatefulWidget extends StatefulWidget {
   String bundleData;
@@ -30,6 +33,35 @@ class BasicAppBarSampleState extends State<BasicAppbarStatefulWidget> {
   void _selecte(Choice choice) {
     setState(() {
       _selectedChoice = choice;
+    });
+  }
+
+  List netData = [];
+  @override
+  void initState() {
+    super.initState();
+    // ScreenUtil.instance = ScreenUtil(width: 750, height: 1334)..init(context);
+
+    loadData();
+  }
+
+  Widget getRow(int i) {
+    return new Padding(
+      padding: new EdgeInsets.all(4.0),
+      child: new Text("Row ${netData[i]["title"]}"),
+    );
+  }
+
+  void loadData() async {
+    String url = "https://jsonplaceholder.typicode.com/posts";
+    http.Response response = await http.get(url);
+    setState(() {
+      netData = json.decode(response.body);
+      if (netData != null) {
+        for (int i = 0; i < 5; i++) {
+          print(netData[i]);
+        }
+      }
     });
   }
 
@@ -69,12 +101,23 @@ class BasicAppBarSampleState extends State<BasicAppbarStatefulWidget> {
         ),
         body: new Padding(
           padding: const EdgeInsets.all(36.0),
-          child: new ChoiceCard(
-            choice: _selectedChoice,
-            mTapClick: (choi) {
-              _selecte(choi);
-//              pushFunction(context);
-            },
+          child: new Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: <Widget>[
+              new ChoiceCard(
+                choice: _selectedChoice,
+                mTapClick: (choi) {
+                  // _selecte(choi);
+                },
+              ),
+              // new ListView.builder(
+              //   itemCount: netData.length,
+              //   itemBuilder: (BuildContext context, int index) {
+              //     return getRow(index);
+              //   },
+              // ),
+            ],
           ),
         ),
       ),
@@ -106,6 +149,13 @@ class ChoiceCard extends StatelessWidget {
               new Text(
                 choice.title,
                 style: textStyle,
+              ),
+              new GestureDetector(
+                child: new Text("BACK"),
+                onTap: () {
+                  // Navigator.of(context)
+                  // .pop({"lat": 43.821757, "long": -79.226392});
+                },
               ),
               new Container(
                 margin: const EdgeInsets.fromLTRB(0, 0, 0, 0),

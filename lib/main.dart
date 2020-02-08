@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/src/scheduler/ticker.dart';
 import 'package:flutter_app/Net.dart';
 import 'package:flutter_app/second.dart';
+import 'package:flutter_app/splash/Splash.dart';
+
+import 'NetSample.dart';
 
 void main() {
 //  var test = Test(1, 22222222);
@@ -9,12 +11,14 @@ void main() {
 //  print(test);
 //  runApp(BasicAppbarSample());
   runApp(MaterialApp(
-    home: TabbedAppBarWidget(),
+    // home: TabbedAppBarWidget(),
+    home:SplashWidget(),
     routes: <String, WidgetBuilder>{
       '/a': (BuildContext context) => MyApp(title: 'page A'),
       '/b': (BuildContext context) =>
           BasicAppbarStatefulWidget(bundleData: 'page B'),
       '/c': (BuildContext context) => MyApp(title: 'page C'),
+      "/netsample": (BuildContext contexst) => SampleApp(),
     },
   ));
 }
@@ -28,9 +32,15 @@ Function pushFunction = (BuildContext context) {
     },
   ));
 };
+Function pushFunctionWithNoBack = (BuildContext context, String routeName) {
+  Navigator.of(context).pushNamed(routeName);
+};
 
-Function pushFunction2 = (BuildContext context, String routeName) {
-  Navigator.pushNamed(context, routeName);
+Function pushFunctionWithBack = (BuildContext context, String routeName) async {
+  Map coordinates = await Navigator.of(context).pushNamed(routeName);
+  if (coordinates != null) {
+    print(coordinates.keys);
+  }
 };
 
 Function pushFunction3 = (
@@ -63,9 +73,9 @@ int nowSelectedIndex = 0;
 Choice _selectedChoice = choices[0];
 
 class TabbedAppBarState extends State<TabbedAppBarWidget>
-    with SingleTickerProviderStateMixin {
+    with SingleTickerProviderStateMixin, WidgetsBindingObserver {
   TabController tabController;
-
+  AppLifecycleState _lastLifecyleState;
   @override
   void initState() {
     super.initState();
@@ -81,6 +91,19 @@ class TabbedAppBarState extends State<TabbedAppBarWidget>
         });
       }
     });
+    WidgetsBinding.instance.addObserver(this);
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    super.didChangeAppLifecycleState(state);
+    _lastLifecyleState = state;
   }
 
   @override
@@ -108,7 +131,7 @@ class TabbedAppBarState extends State<TabbedAppBarWidget>
               mTapClick: (choi) {
 //                setSelectedChoice(choi);
 //                pushFunction(context);
-                pushFunction2(context, "/a");
+                pushFunctionWithNoBack(context, "/a");
 //              pushFunction3(context);
               },
             ),
@@ -153,11 +176,29 @@ class ChoiceCard extends StatelessWidget {
               ),
               new GestureDetector(
                 onTap: () {
-                  pushFunction2(context, "/b");
+                  pushFunctionWithBack(context, "/b");
                 },
                 child: new Text(
-                  "GoToNetDart",
-                  style: Theme.of(context).textTheme.display2,
+                  "GoToNetDart,withBack",
+                  style: Theme.of(context).textTheme.display1,
+                ),
+              ),
+              new GestureDetector(
+                onTap: () {
+                  pushFunctionWithNoBack(context, "/b");
+                },
+                child: new Text(
+                  "GoToNetDart,NoBack",
+                  style: Theme.of(context).textTheme.display1,
+                ),
+              ),
+              new GestureDetector(
+                onTap: () {
+                  pushFunctionWithNoBack(context, "/netsample");
+                },
+                child: new Text(
+                  "GoToNetSample",
+                  style: Theme.of(context).textTheme.display1,
                 ),
               ),
               new Container(
