@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_app/DoubanMain.dart';
+import 'package:flutter_app/page/DoubanMain.dart';
 import 'package:flutter_app/utils/ScreenUtils.dart';
 
 class SplashWidget extends StatefulWidget {
@@ -47,38 +47,14 @@ class _SplashState extends State<SplashWidget> {
                           "By Could Deng",
                           style: TextStyle(fontSize: 15.0, color: Colors.black),
                         ),
-                      )
+                      ),
                     ],
                   ),
                 ),
                 SafeArea(
-                  child: 
-                  Column (
+                  child: Column(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: <Widget>[
-                      Align(
-                        alignment: Alignment(1.0, 0),
-                        child: Container(
-                          margin: EdgeInsets.only(right: 10.0, bottom: 20.0),
-                          padding: EdgeInsets.only(
-                              left: 10.0, right: 10.0, bottom: 2.0, top: 2.0),
-                          child: CountDownWidget(
-                            mCountDownFinishCallback: (bool isEnd) {
-                              if (isEnd) {
-                                setState(() {
-                                  showAd = false;
-                                });
-                              }
-                            },
-                          ),
-                          decoration: BoxDecoration(
-                            color: Color(0xffEDEDED),
-                            borderRadius: const BorderRadius.all(
-                              Radius.circular(10.0),
-                            ),
-                          ),
-                        ),
-                      ),
                       Padding(
                         padding: EdgeInsets.only(bottom: 20.0),
                         child: Row(
@@ -102,7 +78,29 @@ class _SplashState extends State<SplashWidget> {
                           ],
                         ),
                       ),
-                      
+                      Align(
+                        alignment: Alignment(1.0, 0),
+                        child: Container(
+                          margin: EdgeInsets.only(right: 10.0, bottom: 20.0),
+                          padding: EdgeInsets.only(
+                              left: 10.0, right: 10.0, bottom: 2.0, top: 2.0),
+                          child: CountDownWidget(
+                            mCountDownFinishCallback: (bool isEnd) {
+                              if (isEnd) {
+                                setState(() {
+                                  showAd = false;
+                                });
+                              }
+                            },
+                          ),
+                          decoration: BoxDecoration(
+                            color: Color(0xffEDEDED),
+                            borderRadius: const BorderRadius.all(
+                              Radius.circular(10.0),
+                            ),
+                          ),
+                        ),
+                      ),
                     ],
                   ),
                 ),
@@ -129,12 +127,12 @@ class CountDownWidget extends StatefulWidget {
 }
 
 class _CountDownState extends State<CountDownWidget> {
-  int _second = 6;
+  var _second = 6;
   Timer _timer;
-  // var    ?????
+  //     ?????
   @override
   void initState() {
-    // _startTimer();
+    _startTimer();
   }
 
   @override

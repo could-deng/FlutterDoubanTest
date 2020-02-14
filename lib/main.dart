@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_app/Net.dart';
 import 'package:flutter_app/second.dart';
-import 'package:flutter_app/splash/Splash.dart';
+import 'package:flutter_app/page/splash/Splash.dart';
 
 import 'NetSample.dart';
 
