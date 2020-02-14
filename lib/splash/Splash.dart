@@ -52,53 +52,58 @@ class _SplashState extends State<SplashWidget> {
                   ),
                 ),
                 SafeArea(
-                  child: Container(
-                    padding: EdgeInsets.only(bottom: 10.0),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: <Widget>[
-                        Padding(
-                          padding: EdgeInsets.only(bottom: 40.0),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: <Widget>[
-                              Icon(
-                                Icons.desktop_mac,
-                                size: 50.0,
-                                color: Colors.green,
-                              ),
-                              Padding(
-                                padding: EdgeInsets.only(left: 10.0),
-                                child: Text(
-                                  "Hi,豆瓣",
-                                  style: TextStyle(
-                                      fontSize: 30.0,
-                                      color: Colors.green,
-                                      fontWeight: FontWeight.bold),
-                                ),
-                              )
-                            ],
+                  child: 
+                  Column (
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: <Widget>[
+                      Align(
+                        alignment: Alignment(1.0, 0),
+                        child: Container(
+                          margin: EdgeInsets.only(right: 10.0, bottom: 20.0),
+                          padding: EdgeInsets.only(
+                              left: 10.0, right: 10.0, bottom: 2.0, top: 2.0),
+                          child: CountDownWidget(
+                            mCountDownFinishCallback: (bool isEnd) {
+                              if (isEnd) {
+                                setState(() {
+                                  showAd = false;
+                                });
+                              }
+                            },
                           ),
-                        ),
-                        Align(
-                          alignment: Alignment(1.0, 1.0),
-                          child: Container(
-                            margin: EdgeInsets.only(right: 10.0),
-                            padding: EdgeInsets.only(
-                                left: 10.0, right: 10.0, bottom: 2.0, top: 2.0),
-                            child: CountDownWidget(
-                              mCountDownFinishCallback: (bool isEnd) {
-                                if (isEnd) {
-                                  setState(() {
-                                    showAd = false;
-                                  });
-                                }
-                              },
+                          decoration: BoxDecoration(
+                            color: Color(0xffEDEDED),
+                            borderRadius: const BorderRadius.all(
+                              Radius.circular(10.0),
                             ),
                           ),
-                        )
-                      ],
-                    ),
+                        ),
+                      ),
+                      Padding(
+                        padding: EdgeInsets.only(bottom: 20.0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: <Widget>[
+                            Icon(
+                              Icons.desktop_mac,
+                              size: 50.0,
+                              color: Colors.green,
+                            ),
+                            Padding(
+                              padding: EdgeInsets.only(left: 10.0),
+                              child: Text(
+                                "Hi,豆瓣",
+                                style: TextStyle(
+                                    fontSize: 30.0,
+                                    color: Colors.green,
+                                    fontWeight: FontWeight.bold),
+                              ),
+                            )
+                          ],
+                        ),
+                      ),
+                      
+                    ],
                   ),
                 ),
               ],
@@ -129,7 +134,7 @@ class _CountDownState extends State<CountDownWidget> {
   // var    ?????
   @override
   void initState() {
-    _startTimer();
+    // _startTimer();
   }
 
   @override
