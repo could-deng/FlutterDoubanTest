@@ -61,11 +61,11 @@ class _DoubanMainpageWidge extends State<DoubanMainPageWidget> {
               height: 30,
             ),
             activeIcon: Image.asset(
-              item.unActiveIcon,
+              item.activeIcon,
               width: 30,
               height: 30,
             ),
-          ));
+          )).toList();
     }
   }
 
