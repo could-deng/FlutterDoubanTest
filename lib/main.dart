@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_app/Net.dart';
+import 'package:flutter_app/page/DoubanMain.dart';
 import 'package:flutter_app/second.dart';
 import 'package:flutter_app/page/splash/Splash.dart';
 
@@ -12,7 +13,8 @@ void main() {
 //  runApp(BasicAppbarSample());
   runApp(MaterialApp(
     // home: TabbedAppBarWidget(),
-    home:SplashWidget(),
+    // home: SplashWidget(),
+    home:DoubanMainPageWidget(),
     routes: <String, WidgetBuilder>{
       '/a': (BuildContext context) => MyApp(title: 'page A'),
       '/b': (BuildContext context) =>
@@ -124,18 +126,25 @@ class TabbedAppBarState extends State<TabbedAppBarWidget>
                   );
                 }).toList()),
           ),
-          body: new Padding(
-            padding: EdgeInsets.all(11),
-            child: new ChoiceCard(
-              choice: _selectedChoice,
-              mTapClick: (choi) {
-//                setSelectedChoice(choi);
-//                pushFunction(context);
-                pushFunctionWithNoBack(context, "/a");
-//              pushFunction3(context);
-              },
-            ),
+          body: new TabBarView(
+            children: choices.map((Choice choice) {
+              return new Padding(
+                child: new ChoiceCard(
+                  choice: _selectedChoice,
+                  mTapClick: pushFunctionWithNoBack(context, "/a"),
+                ),
+              );
+            }).toList(),
           ),
+          // new Padding(
+          //   padding: EdgeInsets.all(11),
+          //   child: new ChoiceCard(
+          //     choice: _selectedChoice,
+          //     mTapClick: (choi) {
+          //       pushFunctionWithNoBack(context, "/a");
+          //     },
+          //   ),
+          // ),
         ));
   }
 }

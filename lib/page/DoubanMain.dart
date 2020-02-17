@@ -87,7 +87,7 @@ class _DoubanMainpageWidge extends State<DoubanMainPageWidget> {
         iconSize: 24,
         currentIndex: nowSelectedIndex,
         items: itemList,
-        selectedLabelStyle: TextStyle(color: Colors.green),
+        selectedLabelStyle: TextStyle(color: Color.fromARGB(255, 0, 188, 96)),
         unselectedLabelStyle: TextStyle(color: Colors.grey),
       ),
     );
